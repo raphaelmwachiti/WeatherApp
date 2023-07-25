@@ -1,10 +1,14 @@
-import { configureStore } from '@reduxjs/toolkit';
-import thunk from 'redux-thunk';
-import weatherReducer from './reducers/weatherReducer';
+import React from 'react';
+import { Provider } from 'react-redux';
+import store from './src/redux/store';
 
-const store = configureStore({
-  reducer: weatherReducer,
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(thunk),
-});
-
-export default store;
+export default function App() {
+  return (
+    <Provider store={store}>
+      <View style={styles.container}>
+      <Text>Open up App.js to start working on your app!</Text>
+      <StatusBar style="auto" />
+    </View>
+    </Provider>
+  );
+}
