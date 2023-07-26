@@ -3,7 +3,7 @@ import { StyleSheet, View, Text } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Location from 'expo-location';
 
-import { fetchWeather } from '../services/weatherService';
+import { fetchWeather } from '../../services/weatherService';
 
 const WeatherScreen = () => {
     const dispatch = useDispatch();
@@ -28,18 +28,7 @@ const WeatherScreen = () => {
 
     return (
         <View style={styles.container}>
-            {loading ? (
-                <Text>Loading...</Text>
-            ) : error ? (
-                <Text>Error: {error}</Text>
-            ) : (
-                <View>
-                    <Text>Temperature: {weather.main.temp}</Text>
-                    <Text>Humidity: {weather.main.humidity}</Text>
-                    <Text>Conditions: {weather.weather[0].main}</Text>
-                    <Text>Description: {weather.weather[0].description}</Text>
-                </View>
-            )}
+            
         </View>
     );
 };
@@ -49,6 +38,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+        backgroundColor: 'red',
     },
 });
 
