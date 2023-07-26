@@ -1,45 +1,60 @@
-import React, { useEffect } from 'react';
-import { StyleSheet, View, Text } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
-import * as Location from 'expo-location';
+import React from 'react';
+import { StyleSheet, View, Text, Dimensions } from 'react-native';
+import Animated from 'react-native-reanimated';
 
-import { fetchWeather } from '../../services/weatherService';
+const SCREEN_HEIGHT = Dimensions.get('window').height;
 
 const WeatherScreen = () => {
-    const dispatch = useDispatch();
-    const weatherData = useSelector((state) => state.weather);
-    const { loading, weather, error } = weatherData;
+    const scrollY = new Animated.Value(0);
 
-    const getLocation = async () => {
-        let { status } = await Location.requestForegroundPermissionsAsync();
-        if (status !== 'granted') {
-            dispatch(fetchWeatherFailure('Permission to access location was denied'));
-            return;
-        }
+    const blueHeight = scrollY.interpolate({
+        inputRange: [0, SCREEN_HEIGHT],
+        outputRange: [SCREEN_HEIGHT * 0.5, SCREEN_HEIGHT * 0.2],
+        extrapolate: 'clamp'
+    });
 
-        let location = await Location.getCurrentPositionAsync({});
-        const { latitude, longitude } = location.coords;
-        dispatch(fetchWeather(latitude, longitude));
-    };
-
-    useEffect(() => {
-        getLocation();
-    }, []);
+    const greenHeight = scrollY.interpolate({
+        inputRange: [0, SCREEN_HEIGHT],
+        outputRange: [SCREEN_HEIGHT * 0.5, SCREEN_HEIGHT * 0.8],
+        extrapolate: 'clamp'
+    });
 
     return (
         <View style={styles.container}>
-            
+            <Animated.View style={[styles.box, { height: blueHeight, backgroundColor: 'blue' }]} />
+            <Animated.ScrollView
+                onScroll={Animated.event(
+                    [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+                    { useNativeDriver: true }
+                )}
+                style={[styles.box, { height: greenHeight, backgroundColor: 'green' }]}
+            >
+                {/* You can add more purple cards here */}
+                <View style={styles.purpleCard} />
+                <View style={styles.purpleCard} />
+                <View style={styles.purpleCard} />
+                <View style={styles.purpleCard} />
+                <View style={styles.purpleCard} />
+                <View style={styles.purpleCard} />
+                <View style={styles.purpleCard} />
+            </Animated.ScrollView>
         </View>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'red',
+        flex: 1
     },
+    box: {
+        width: '100%',
+    },
+    purpleCard: {
+        height: SCREEN_HEIGHT * 0.2,
+        margin: 10,
+        backgroundColor: 'purple',
+        borderRadius: 10
+    }
 });
 
 export default WeatherScreen;
